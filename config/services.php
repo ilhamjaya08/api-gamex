@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'h2h' => [
+        'base_url' => env('H2H_BASE_URL', 'https://h2h.okeconnect.com'),
+        'member_id' => env('H2H_MEMBER_ID'),
+        'pin' => env('H2H_PIN'),
+        'password' => env('H2H_PASSWORD'),
+    ],
+
 ];
