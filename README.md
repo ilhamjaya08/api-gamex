@@ -60,6 +60,14 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
+## API
+
+### Admin – Check H2H Balance
+
+- Endpoint: `GET /api/admin/h2h/balance`
+- Authentication: Bearer token via Sanctum (admin role required)
+- Description: Fetches the current H2H server balance by proxying the OkeConnect endpoint and returns the parsed balance along with the original provider response.
+
 #### Environment Variables
 
 Configure the following in your `.env` file:
@@ -70,3 +78,60 @@ H2H_MEMBER_ID=OK*****
 H2H_PIN=******
 H2H_PASSWORD=*********
 ```
+
+#### Response Example
+
+```json
+{
+  "balance": 284.939,
+  "raw_balance": "Saldo 284.939"
+}
+```
+
+If the upstream response format cannot be parsed or the remote call fails, the API returns an error with the provider response for easier troubleshooting.
+
+### Admin – Import Products from OkeConnect
+
+- Endpoint: `POST /api/admin/products/import`
+- Authentication: Bearer token via Sanctum (admin role required)
+- Description: Pulls the complete price list from OkeConnect and upserts every item into the local `products` table. New items are inserted; existing items are updated with the latest metadata.
+
+### Admin – Refresh Existing Products
+
+- Endpoint: `POST /api/admin/products/refresh`
+- Authentication: Bearer token via Sanctum (admin role required)
+- Description: Fetches the current price list and updates only products that already exist locally (matched by `kode`). Remote items without a local match are ignored.
+
+#### Environment Variables
+
+Add the following to enable OkeConnect imports:
+
+```
+OKECONNECT_PRICE_URL=https://okeconnect.com/harga/json
+OKECONNECT_PRICE_ID=905ccd028329b0a
+OKECONNECT_PRICE_PRODUCTS=saldo_gojek,digital
+```
+
+#### Response Examples
+
+Import:
+
+```json
+{
+  "message": "Products imported successfully.",
+  "fetched": 120,
+  "created": 115,
+  "updated": 5
+}
+```
+
+Refresh:
+
+```json
+{
+  "message": "Products refreshed successfully.",
+  "updated": 42
+}
+```
+
+When the upstream request fails, both endpoints return a `502` status with the failure details to aid troubleshooting.

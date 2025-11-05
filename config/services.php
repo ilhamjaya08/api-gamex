@@ -42,4 +42,10 @@ return [
         'password' => env('H2H_PASSWORD'),
     ],
 
+    'okeconnect' => [
+        'price_url' => env('OKECONNECT_PRICE_URL', 'https://okeconnect.com/harga/json'),
+        'price_id' => env('OKECONNECT_PRICE_ID'),
+        'price_products' => env('OKECONNECT_PRICE_PRODUCTS', 'saldo_gojek,digital'),
+    ],
+
 ];

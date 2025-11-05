@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\Admin\H2hBalanceController;
+use App\Http\Controllers\Api\Admin\ProductSyncController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,8 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('h2h/balance', H2hBalanceController::class);
+    Route::post('products/import', [ProductSyncController::class, 'import']);
+    Route::post('products/refresh', [ProductSyncController::class, 'refresh']);
     Route::get('users', [AdminUserController::class, 'index']);
     Route::post('users', [AdminUserController::class, 'store']);
     Route::get('users/{user}', [AdminUserController::class, 'show']);
