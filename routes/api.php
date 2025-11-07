@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\Admin\H2hBalanceController;
 use App\Http\Controllers\Api\Admin\ProductSyncController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -28,3 +29,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
     Route::delete('users/{user}', [AdminUserController::class, 'destroy']);
     Route::patch('users/{user}/toggle-role', [AdminUserController::class, 'toggleRole']);
 });
+
+Route::get('categories', [CategoryController::class, 'index']);
+Route::get('categories/with-products', [CategoryController::class, 'withProducts']);
+Route::get('categories/{category}/products', [CategoryController::class, 'products']);
