@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\Admin\H2hBalanceController;
 use App\Http\Controllers\Api\Admin\ProductSyncController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DepositController;
+use App\Http\Controllers\Api\QrisWebhookController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -33,3 +35,12 @@ Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(functi
 Route::get('categories', [CategoryController::class, 'index']);
 Route::get('categories/with-products', [CategoryController::class, 'withProducts']);
 Route::get('categories/{category}/products', [CategoryController::class, 'products']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('deposits', [DepositController::class, 'index']);
+    Route::post('deposits', [DepositController::class, 'store']);
+    Route::get('deposits/{deposit}', [DepositController::class, 'show']);
+    Route::post('deposits/{deposit}/cancel', [DepositController::class, 'cancel']);
+});
+
+Route::post('webhook/qris', [QrisWebhookController::class, 'handle']);

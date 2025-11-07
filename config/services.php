@@ -48,4 +48,8 @@ return [
         'price_products' => env('OKECONNECT_PRICE_PRODUCTS', 'saldo_gojek,digital'),
     ],
 
+    'qris' => [
+        'code' => env('QRIS_CODE'),
+    ],
+
 ];
