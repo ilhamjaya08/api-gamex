@@ -57,11 +57,7 @@ class ProductSyncController extends Controller
             }
         }
 
-        Product::upsert(
-            $normalizedRows,
-            ['kode'],
-            ['nama', 'kategori', 'keterangan', 'harga', 'status', 'updated_at']
-        );
+        Product::upsert($normalizedRows, ['kode'], ['nama', 'keterangan', 'harga', 'status', 'updated_at']);
 
         return response()->json([
             'message' => 'Products imported successfully.',
@@ -119,11 +115,7 @@ class ProductSyncController extends Controller
             ]);
         }
 
-        Product::upsert(
-            $rowsToUpdate,
-            ['kode'],
-            ['nama', 'kategori', 'keterangan', 'harga', 'status', 'updated_at']
-        );
+        Product::upsert($rowsToUpdate, ['kode'], ['nama', 'keterangan', 'harga', 'status', 'updated_at']);
 
         return response()->json([
             'message' => 'Products refreshed successfully.',
@@ -183,7 +175,6 @@ class ProductSyncController extends Controller
             return null;
         }
 
-        $kategori = $this->stringValue($product, 'kategori') ?? 'UNKNOWN';
         $keterangan = $this->stringValue($product, 'keterangan');
         $harga = $this->normalizePrice($product['harga'] ?? null);
 
@@ -194,7 +185,6 @@ class ProductSyncController extends Controller
         return [
             'kode' => $kode,
             'nama' => $nama,
-            'kategori' => $kategori,
             'keterangan' => $keterangan,
             'harga' => $harga,
             'status' => $this->normalizeStatus($product['status'] ?? null),

@@ -101,6 +101,7 @@ If the upstream response format cannot be parsed or the remote call fails, the A
 - Endpoint: `POST /api/admin/products/refresh`
 - Authentication: Bearer token via Sanctum (admin role required)
 - Description: Fetches the current price list and updates only products that already exist locally (matched by `kode`). Remote items without a local match are ignored.
+- Note: Product-category assignments are optional; the import and refresh flows never overwrite `category_id`.
 
 #### Environment Variables
 
