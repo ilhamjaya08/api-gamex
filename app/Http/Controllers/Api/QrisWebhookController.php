@@ -24,17 +24,15 @@ class QrisWebhookController extends Controller
             ]);
 
             // Validate webhook data
-            $body = $request->input('body');
+            $data = $request->input('data');
 
-            if (!$body || !isset($body['data'])) {
-                Log::warning('Invalid webhook payload - missing body.data');
+            if (!$data || !is_array($data)) {
+                Log::warning('Invalid webhook payload - missing data');
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid webhook payload',
                 ], 400);
             }
-
-            $data = $body['data'];
 
             // Check if required fields exist
             if (!isset($data['amount']) || !isset($data['type'])) {
@@ -55,7 +53,7 @@ class QrisWebhookController extends Controller
             }
 
             $amount = (float) $data['amount'];
-            $timestamp = $request->input('timestamp');
+            $timestamp = $data['time'] ?? null;
 
             // Find matching pending deposit by total_amount
             $deposit = Deposit::where('status', 'pending')
@@ -75,10 +73,19 @@ class QrisWebhookController extends Controller
             DB::beginTransaction();
 
             try {
+                // Parse timestamp from webhook (format: "08/11/2025 12:25")
+                $paidAt = now();
+                if ($timestamp) {
+                    $parsedDate = \DateTime::createFromFormat('d/m/Y H:i', $timestamp);
+                    if ($parsedDate) {
+                        $paidAt = $parsedDate->format('Y-m-d H:i:s');
+                    }
+                }
+
                 // Update deposit status
                 $deposit->update([
                     'status' => 'success',
-                    'paid_at' => $timestamp ? date('Y-m-d H:i:s', strtotime($timestamp)) : now(),
+                    'paid_at' => $paidAt,
                 ]);
 
                 // Add balance to user (including the random amount)
