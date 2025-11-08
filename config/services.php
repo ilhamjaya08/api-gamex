@@ -50,6 +50,9 @@ return [
 
     'qris' => [
         'code' => env('QRIS_CODE'),
+        'merchant_code' => env('QRIS_MERCHANT_CODE'),
+        'api_key' => env('QRIS_API_KEY'),
+        'mutasi_url' => env('QRIS_MUTASI_URL', 'https://qiospay.id/api/mutasi/qris'),
     ],
 
 ];

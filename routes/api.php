@@ -43,4 +43,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('deposits/{deposit}/cancel', [DepositController::class, 'cancel']);
 });
 
+// Public routes
+Route::get('deposits/{deposit}/refresh-status', [DepositController::class, 'refreshStatus']);
 Route::post('webhook/qris', [QrisWebhookController::class, 'handle']);
