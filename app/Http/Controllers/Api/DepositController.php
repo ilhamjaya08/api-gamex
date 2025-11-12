@@ -39,6 +39,34 @@ class DepositController extends Controller
     }
 
     /**
+     * Get current active deposit (pending status) for authenticated user
+     */
+    public function active(Request $request): JsonResponse
+    {
+        $activeDeposit = $request->user()
+            ->deposits()
+            ->where('status', 'pending')
+            ->first();
+
+        if (!$activeDeposit) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No active deposit found',
+                'data' => null,
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Active deposit found',
+            'data' => [
+                'deposit' => $activeDeposit,
+                'qris_image_url' => url($activeDeposit->qris_image),
+            ],
+        ]);
+    }
+
+    /**
      * Get single deposit
      */
     public function show(Request $request, Deposit $deposit): JsonResponse

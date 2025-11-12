@@ -38,6 +38,7 @@ Route::get('categories/{category}/products', [CategoryController::class, 'produc
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('deposits', [DepositController::class, 'index']);
+    Route::get('deposits/active', [DepositController::class, 'active']);
     Route::post('deposits', [DepositController::class, 'store']);
     Route::get('deposits/{deposit}', [DepositController::class, 'show']);
     Route::post('deposits/{deposit}/cancel', [DepositController::class, 'cancel']);
