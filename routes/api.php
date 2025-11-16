@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DepositController;
 use App\Http\Controllers\Api\QrisWebhookController;
+use App\Http\Controllers\Api\TransactionCallbackController;
+use App\Http\Controllers\Api\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -47,3 +49,14 @@ Route::middleware('auth:sanctum')->group(function () {
 // Public routes
 Route::get('deposits/{deposit}/refresh-status', [DepositController::class, 'refreshStatus']);
 Route::post('webhook/qris', [QrisWebhookController::class, 'handle']);
+
+// Transaction routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('transactions', [TransactionController::class, 'index']);
+    Route::post('transactions', [TransactionController::class, 'store']);
+    Route::get('transactions/{transaction}', [TransactionController::class, 'show']);
+    Route::get('transactions/{transaction}/refresh-status', [TransactionController::class, 'refreshStatus']);
+});
+
+// Transaction callback webhook (public)
+Route::get('webhook/transaction-callback', TransactionCallbackController::class);
